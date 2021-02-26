@@ -3,17 +3,19 @@ import axios from 'axios'
 
 const App = () => {
 
-  let [googleStatus, setGoogleStatus] = useState('')
+  let [googleStatus, setGoogleStatus] = useState({status: 0, count: 0})
 
-  const checkUpTime = (url) => {
+  const monitorkUpTime = (url, stats, setter) => {
     axios.get('https://sleepy-plateau-48238.herokuapp.com/' + url)
-    .then(response => console.log(response.status, "response back"))
+    .then(response => setter({...stats, status: response.status}))
   }
+
+  console.log(googleStatus, "google status")
 
   return(
     <div>
       Hello from React
-      <p onClick={() => checkUpTime('https://www.google.com')}>Click me!</p>
+      <p onClick={() => monitorUpTime('https://www.google.com', googleStatus, setGoogleStatus)}>Click me!</p>
     </div>
   )
 }
