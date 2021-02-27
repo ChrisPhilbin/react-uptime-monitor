@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import axios from 'axios'
+// import axios from 'axios'
 
 const App = () => {
 
@@ -39,27 +39,28 @@ const App = () => {
   let [monitoredSites, setMonitoredSites] = useState(sites)
   let [isMonitoring, setIsMonitoring]     = useState(false)
 
+  // const monitorUpTime = () => {
+  //   monitoredSites.map((site) => {
+  //     axios.get('https://sleepy-plateau-48238.herokuapp.com/' + site.attributes.url)
+  //     .then(response => site.attributes.status = response.status)
+  //     .then(site.attributes.total += 1)
+  //     .then(setMonitoredSites([...monitoredSites, site]))
+  //     .then(console.log(monitoredSites, "monitored sites object"))
+  //   })
+  // }
+
   const monitorUpTime = () => {
-    monitoredSites.map((site) => {
-      axios.get('https://sleepy-plateau-48238.herokuapp.com/' + site.attributes.url)
+    monitoredSites.forEach((site) => {
+      fetch('https://sleepy-plateau-48238.herokuapp.com/' + site.attributes.url)
       .then(response => site.attributes.status = response.status)
       .then(site.attributes.total += 1)
-      .then(setMonitoredSites([...monitoredSites, site]))
-      .then(console.log(monitoredSites, "monitored sites object"))
+      .then(setMonitoredSites([...monitoredSites]))
     })
   }
 
-  let interval
-
   const beginMonitoring = () => {
     setIsMonitoring(true)
-    monitorUpTime()
-    interval = setInterval(monitorUpTime, 12000)
-  }
-
-  const stopMonitoring = () => {
-    setIsMonitoring(false)
-    clearInterval(interval)
+    setInterval(monitorUpTime, 12000)
   }
 
   if (!isMonitoring) {
@@ -74,10 +75,9 @@ const App = () => {
         Started monitoring...
         {
           monitoredSites.map((site) => (
-            <li key={site.name}>{site.name} - {site.attributes.status}</li>
+            <li key={site.name}>{site.name} - {site.attributes.status} - {site.attributes.total}</li>
           ))
         }
-        <p onClick={() => stopMonitoring()}>Stop monitoring</p>
       </div>
     )
   }
