@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-// import axios from 'axios'
 
 const App = () => {
 
@@ -10,7 +9,7 @@ const App = () => {
         url: 'https://www.google.com',
         isDown: false,
         downCount: 0,
-        status: 0,
+        httpStatusCode: 0,
         total: 0
       }
     },
@@ -20,7 +19,7 @@ const App = () => {
         url: 'https://www.yahoo.com',
         isDown: false,
         downCount: 0,
-        status: 0,
+        httpStatusCode: 0,
         total: 0
       }
     },
@@ -30,7 +29,7 @@ const App = () => {
         url: 'https://www.ultimatesoftware.com',
         isDown: false,
         downCount: 0,
-        status: 0,
+        httpStatusCode: 0,
         total: 0
       }
     }
@@ -39,20 +38,10 @@ const App = () => {
   let [monitoredSites, setMonitoredSites] = useState(sites)
   let [isMonitoring, setIsMonitoring]     = useState(false)
 
-  // const monitorUpTime = () => {
-  //   monitoredSites.map((site) => {
-  //     axios.get('https://sleepy-plateau-48238.herokuapp.com/' + site.attributes.url)
-  //     .then(response => site.attributes.status = response.status)
-  //     .then(site.attributes.total += 1)
-  //     .then(setMonitoredSites([...monitoredSites, site]))
-  //     .then(console.log(monitoredSites, "monitored sites object"))
-  //   })
-  // }
-
   const monitorUpTime = () => {
     monitoredSites.forEach((site) => {
       fetch('https://sleepy-plateau-48238.herokuapp.com/' + site.attributes.url)
-      .then(response => site.attributes.status = response.status)
+      .then(response => site.attributes.httpStatusCode = response.status)
       .then(site.attributes.total += 1)
       .then(setMonitoredSites([...monitoredSites]))
     })
@@ -75,7 +64,7 @@ const App = () => {
         Started monitoring...
         {
           monitoredSites.map((site) => (
-            <li key={site.name}>{site.name} - {site.attributes.status} - {site.attributes.total}</li>
+            <li key={site.name}>{site.name} - {site.attributes.httpStatusCode} - {site.attributes.total}</li>
           ))
         }
       </div>
