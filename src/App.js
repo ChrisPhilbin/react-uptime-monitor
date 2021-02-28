@@ -42,8 +42,19 @@ const App = () => {
     monitoredSites.forEach((site) => {
       fetch('https://sleepy-plateau-48238.herokuapp.com/' + site.attributes.url)
       .then(response => site.attributes.httpStatusCode = response.status)
-      .then(site.attributes.total += 1)
       .then(setMonitoredSites([...monitoredSites]))
+      if (site.attributes.httpStatusCode != 200) {
+        site.attributes.downCount += 1
+        if (site.attributes.downCount === 4) {
+          alert(`It looks like ${site.name} is currently down!`)
+        }
+      }
+    })
+  }
+
+  const clearDownCounts = () => {
+    monitoredSites.forEach((site) => {
+      site.attributes.downCount = 0
     })
   }
 
