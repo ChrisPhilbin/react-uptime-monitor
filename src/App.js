@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 const App = () => {
 
@@ -38,49 +38,44 @@ const App = () => {
   let [monitoredSites, setMonitoredSites] = useState(sites)
   let [isMonitoring, setIsMonitoring]     = useState(false)
 
-  const monitorUpTime = () => {
+  useEffect(() => {
     monitoredSites.forEach((site) => {
       fetch('https://sleepy-plateau-48238.herokuapp.com/' + site.attributes.url)
       .then(response => site.attributes.httpStatusCode = response.status)
-      .then(setMonitoredSites([...monitoredSites]))
-      if (site.attributes.httpStatusCode != 200) {
-        site.attributes.downCount += 1
-        if (site.attributes.downCount === 4) {
-          alert(`It looks like ${site.name} is currently down!`)
-        }
+    })
+  }, [monitoredSites])
+
+  // const monitorUpTime = () => {
+  //   monitoredSites.forEach((site) => {
+  //     fetch('https://sleepy-plateau-48238.herokuapp.com/' + site.attributes.url)
+  //     .then(response => site.attributes.httpStatusCode = response.status)
+  //     .then(setMonitoredSites([...monitoredSites]))
+  //   })
+  // }
+
+  // const clearDownCounts = () => {
+  //   monitoredSites.forEach((site) => {
+  //     site.attributes.downCount = 0
+  //   })
+  // }
+
+  // const beginMonitoring = () => {
+  //   setIsMonitoring(true)
+  //   monitorUpTime()
+  //   setInterval(monitorUpTime, 180000)
+  //   setInterval(clearDownCounts, 900000) //automatically clear the downCounts after 15 minutes
+  // }
+
+  return (
+    <div>
+      Started monitoring...
+      {
+        monitoredSites.map((site) => (
+          <li key={site.name}>{site.name} - {site.attributes.httpStatusCode} - {site.attributes.total}</li>
+        ))
       }
-    })
-  }
-
-  const clearDownCounts = () => {
-    monitoredSites.forEach((site) => {
-      site.attributes.downCount = 0
-    })
-  }
-
-  const beginMonitoring = () => {
-    setIsMonitoring(true)
-    setInterval(monitorUpTime, 12000)
-  }
-
-  if (!isMonitoring) {
-    return(
-      <div>
-        <p onClick={() => beginMonitoring()}>Click me!</p>
-      </div>
-    )
-  } else {
-    return (
-      <div>
-        Started monitoring...
-        {
-          monitoredSites.map((site) => (
-            <li key={site.name}>{site.name} - {site.attributes.httpStatusCode} - {site.attributes.total}</li>
-          ))
-        }
-      </div>
-    )
-  }
+    </div>
+  )
 }
 
 export default App
