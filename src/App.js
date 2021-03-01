@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Paper from '@material-ui/core/Paper'
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
+import Typography from '@material-ui/core/Typography'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -13,6 +14,9 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'center',
     color: theme.palette.text.secondary,
   },
+  headerGrid: {
+    textAlign: 'center',
+  }
 }));
 
 const App = () => {
@@ -56,6 +60,7 @@ const App = () => {
   let [isMonitoring, setIsMonitoring]     = useState(false)
 
    const checkUpTime = () => {
+    setIsMonitoring(true)
     monitoredSites.forEach((site) => {
       if (site.attributes.isDown === true) {
         return
@@ -71,7 +76,6 @@ const App = () => {
           site.attributes.httpStatusCode = response.status
           site.attributes.downCount += 1
             if (site.attributes.downCount >= 4) {
-              alert(`It appears as though ${site.name} is currently down!`)
               site.attributes.isDown = true
             }
           setMonitoredSites([...monitoredSites])
@@ -80,10 +84,16 @@ const App = () => {
     })
   }
 
+  let interval
+
   const beginMonitoring = () => {
-    setIsMonitoring(true)
     checkUpTime()
-    setInterval(checkUpTime, 5000)
+    interval = setInterval(checkUpTime, 5000)
+  }
+
+  const stopMonitoring = () => {
+    clearInterval(beginMonitoring)
+    setIsMonitoring(false)
   }
 
   const resetIsDown = (site) => {
@@ -95,16 +105,21 @@ const App = () => {
   return (
     <div className={classes.root}>
       <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <Button variant="contained" color="primary" onClick={ () => beginMonitoring() }>
-            Start Monitoring
-          </Button>
+        <Grid item xs={12} className={classes.headerGrid}>
+          <Typography variant="h2" gutterBottom>Pay Watch 90210</Typography>
+          { isMonitoring ? 
+            <Button variant="contained" color="primary" onClick={ () => stopMonitoring() }>Stop Monitoring</Button> :
+            <Button variant="contained" color="primary" onClick={ () => beginMonitoring() }>Start Monitoring</Button>
+          }
         </Grid>
         {
           monitoredSites.map((site) => (
-            <Grid item xs={6}>
+            <Grid item xs={6} key={site.name}>
               <Paper className={classes.paper}>
-                <li key={site.name}>{site.name} - {site.attributes.httpStatusCode} - {site.attributes.total} - {site.attributes.downCount}</li>
+                <Typography variant="h3" align="center" color="primary">
+                  {site.name}
+                </Typography>
+                {site.attributes.httpStatusCode} - {site.attributes.total} - {site.attributes.downCount}
                 {site.attributes.isDown ? <Button variant="contained" color="primary" onClick={ () => resetIsDown(site)}>Start monitoring</Button> : null }
               </Paper>
             </Grid>
