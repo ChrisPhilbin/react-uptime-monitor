@@ -16,12 +16,14 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     padding: theme.spacing(2),
     textAlign: 'center',
-    color: theme.palette.text.secondary
+    color: theme.palette.text.secondary,
+    position: 'relative'
   },
   headerGrid: {
     textAlign: 'center',
   },
   deleteIcon: {
+    padding: 8,
     position: 'absolute',
     top: 0,
     right: 0
