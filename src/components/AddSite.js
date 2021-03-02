@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
+import { securityRules } from 'firebase-admin'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -14,15 +15,26 @@ const useStyles = makeStyles((theme) => ({
 
 const AddSite = (props) => {
 
-    console.log(props, "props from AddSite component")
-
     const classes = useStyles()
 
     let [name, setName] = useState('')
     let [url, setURL]   = useState('')
 
     const handleSubmit = () => {
-        console.log("handling submit...")
+        let newSite = {
+            name: name,
+            attributes: {
+                url: url,
+                isDown: false,
+                downCount: 0,
+                httpStatusCode: 0,
+                total: 0
+            }
+        }
+        props.monitoredSites.push(newSite)
+        props.setMonitoredSites([...props.monitoredSites])
+        setName('')
+        setURL('')
     }
 
     return(
