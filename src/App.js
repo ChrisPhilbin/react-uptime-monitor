@@ -19,6 +19,8 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+let interval = null
+
 const App = () => {
 
   const classes = useStyles()
@@ -60,12 +62,10 @@ const App = () => {
   let [isMonitoring, setIsMonitoring]     = useState(false)
 
    const checkUpTime = () => {
-    setIsMonitoring(true)
     monitoredSites.forEach((site) => {
       if (site.attributes.isDown === true) {
         return
       }
-      console.log(site, "current site object being checked")
       fetch('https://sleepy-plateau-48238.herokuapp.com/' + site.attributes.url)
       .then(response => {
         if (response.status === 200) {
@@ -84,18 +84,18 @@ const App = () => {
     })
   }
 
-  let interval
-
-  const beginMonitoring = () => {
+  const startMonitoring = () => {
+    setIsMonitoring(true)
     checkUpTime()
     interval = setInterval(checkUpTime, 5000)
   }
 
   const stopMonitoring = () => {
-    clearInterval(beginMonitoring)
     setIsMonitoring(false)
+    clearInterval(interval)
+    interval = 0
   }
-
+  
   const resetIsDown = (site) => {
     site.attributes.isDown = false
     site.attributes.downCount = 0
@@ -107,9 +107,10 @@ const App = () => {
       <Grid container spacing={3}>
         <Grid item xs={12} className={classes.headerGrid}>
           <Typography variant="h2" gutterBottom>Pay Watch 90210</Typography>
-          { isMonitoring ? 
-            <Button variant="contained" color="primary" onClick={ () => stopMonitoring() }>Stop Monitoring</Button> :
-            <Button variant="contained" color="primary" onClick={ () => beginMonitoring() }>Start Monitoring</Button>
+          { isMonitoring ?
+          <Button variant="contained" color="primary" onClick={stopMonitoring}>Stop Monitoring</Button> 
+          :
+          <Button variant="contained" color="primary" onClick={startMonitoring}>Start Monitoring</Button>
           }
         </Grid>
         {
