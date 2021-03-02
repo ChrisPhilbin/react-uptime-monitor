@@ -5,14 +5,17 @@ import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
 
+import AddSite from './components/AddSite'
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
+    padding: 50
   },
   paper: {
     padding: theme.spacing(2),
     textAlign: 'center',
-    color: theme.palette.text.secondary,
+    color: theme.palette.text.secondary
   },
   headerGrid: {
     textAlign: 'center',
@@ -87,7 +90,7 @@ const App = () => {
   const startMonitoring = () => {
     setIsMonitoring(true)
     checkUpTime()
-    interval = setInterval(checkUpTime, 5000)
+    interval = setInterval(checkUpTime, 300000)
   }
 
   const stopMonitoring = () => {
@@ -113,6 +116,10 @@ const App = () => {
           <Button variant="contained" color="primary" onClick={startMonitoring}>Start Monitoring</Button>
           }
         </Grid>
+
+        <Grid item xs={12} className={classes.headerGrid}>
+          <AddSite monitoredSites={monitoredSites} setMonitoredSites={setMonitoredSites} />
+        </Grid>
         {
           monitoredSites.map((site) => (
             <Grid item xs={6} key={site.name}>
@@ -120,7 +127,9 @@ const App = () => {
                 <Typography variant="h3" align="center" color="primary">
                   {site.name}
                 </Typography>
-                {site.attributes.httpStatusCode} - {site.attributes.total} - {site.attributes.downCount}
+                status: {site.attributes.httpStatusCode}<br />
+                total times checked: {site.attributes.total}<br />
+                total times failed: {site.attributes.downCount}<br />
                 {site.attributes.isDown ? <Button variant="contained" color="primary" onClick={ () => resetIsDown(site)}>Start monitoring</Button> : null }
               </Paper>
             </Grid>
