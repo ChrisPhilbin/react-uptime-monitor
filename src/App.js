@@ -4,6 +4,7 @@ import Paper from '@material-ui/core/Paper'
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
+import DeleteIcon from '@material-ui/icons/Delete'
 
 import AddSite from './components/AddSite'
 
@@ -19,6 +20,11 @@ const useStyles = makeStyles((theme) => ({
   },
   headerGrid: {
     textAlign: 'center',
+  },
+  deleteIcon: {
+    position: 'absolute',
+    top: 0,
+    right: 0
   }
 }));
 
@@ -105,6 +111,12 @@ const App = () => {
     setMonitoredSites([...monitoredSites])
   }
 
+  const removeSite = (name) => {
+    console.log(name, "name being passed in")
+    monitoredSites = monitoredSites.filter((site) => site.name !== name)
+    setMonitoredSites([...monitoredSites])
+  }
+
   return (
     <div className={classes.root}>
       <Grid container spacing={3}>
@@ -124,13 +136,16 @@ const App = () => {
           monitoredSites.map((site) => (
             <Grid item xs={6} key={site.name}>
               <Paper className={classes.paper}>
-                <Typography variant="h3" align="center" color="primary">
-                  {site.name}
-                </Typography>
-                status: {site.attributes.httpStatusCode}<br />
-                total times checked: {site.attributes.total}<br />
-                total times failed: {site.attributes.downCount}<br />
-                {site.attributes.isDown ? <Button variant="contained" color="primary" onClick={ () => resetIsDown(site)}>Start monitoring</Button> : null }
+                <div>
+                  <DeleteIcon className={classes.deleteIcon} onClick={() => removeSite(site.name)} />
+                  <Typography variant="h3" align="center" color="primary">
+                    {site.name}
+                  </Typography>
+                  status: {site.attributes.httpStatusCode}<br />
+                  total times checked: {site.attributes.total}<br />
+                  total times failed: {site.attributes.downCount}<br />
+                  {site.attributes.isDown ? <Button variant="contained" color="primary" onClick={ () => resetIsDown(site)}>Start monitoring</Button> : null }
+                </div>
               </Paper>
             </Grid>
           ))
