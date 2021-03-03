@@ -75,6 +75,7 @@ const App = () => {
   let [timeToRefresh, setTimeToRefresh]   = useState(300)
 
    const checkUpTime = () => {
+    setTimeToRefresh(300)
     monitoredSites.forEach((site) => {
       if (site.attributes.isDown === true) {
         return
@@ -100,11 +101,7 @@ const App = () => {
   const startTimer = () => {
     setTimeToRefresh(300)
     timer = setInterval(() => {
-      console.log(timeToRefresh, "time to refresh from within interval function")
       setTimeToRefresh(prevTimeToRefresh => prevTimeToRefresh - 1)
-      if (timeToRefresh === 0) {
-        clearInterval(timer)
-      }
     }, 1000) 
   }
 
@@ -130,7 +127,6 @@ const App = () => {
   }
 
   const removeSite = (name) => {
-    console.log(name, "name being passed in")
     monitoredSites = monitoredSites.filter((site) => site.name !== name)
     setMonitoredSites([...monitoredSites])
   }
@@ -139,11 +135,11 @@ const App = () => {
     <div className={classes.root}>
       <Grid container spacing={3}>
         <Grid item xs={12} className={classes.headerGrid}>
-          <Typography variant="h2" gutterBottom>Pay Watch 90210</Typography>
+          <Typography variant="h2" gutterBottom>Pay Watch</Typography>
           { isMonitoring ?
           <div>
-            <Button variant="contained" color="primary" onClick={stopMonitoring}>Stop Monitoring</Button>
-            <span>Next refresh in: {timeToRefresh}</span>
+            <Button variant="contained" color="primary" onClick={stopMonitoring}>Stop Monitoring</Button><br />
+            <span>Next refresh in: {timeToRefresh} seconds</span>
           </div>
           :
           <Button variant="contained" color="primary" onClick={startMonitoring}>Start Monitoring</Button>
