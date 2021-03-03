@@ -31,6 +31,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 let interval = null
+let timer    = null
 
 const App = () => {
 
@@ -71,6 +72,7 @@ const App = () => {
 
   let [monitoredSites, setMonitoredSites] = useState(sites)
   let [isMonitoring, setIsMonitoring]     = useState(false)
+  let [timeToRefresh, setTimeToRefresh]   = useState(300)
 
    const checkUpTime = () => {
     monitoredSites.forEach((site) => {
@@ -95,9 +97,21 @@ const App = () => {
     })
   }
 
+  const startTimer = () => {
+    setTimeToRefresh(300)
+    timer = setInterval(() => {
+      console.log(timeToRefresh, "time to refresh from within interval function")
+      setTimeToRefresh(prevTimeToRefresh => prevTimeToRefresh - 1)
+      if (timeToRefresh === 0) {
+        clearInterval(timer)
+      }
+    }, 1000) 
+  }
+
   const startMonitoring = () => {
     setIsMonitoring(true)
     checkUpTime()
+    startTimer()
     interval = setInterval(checkUpTime, 300000)
   }
 
@@ -105,6 +119,8 @@ const App = () => {
     setIsMonitoring(false)
     clearInterval(interval)
     interval = 0
+    clearInterval(timer)
+    timer = 0
   }
   
   const resetIsDown = (site) => {
@@ -125,7 +141,10 @@ const App = () => {
         <Grid item xs={12} className={classes.headerGrid}>
           <Typography variant="h2" gutterBottom>Pay Watch 90210</Typography>
           { isMonitoring ?
-          <Button variant="contained" color="primary" onClick={stopMonitoring}>Stop Monitoring</Button> 
+          <div>
+            <Button variant="contained" color="primary" onClick={stopMonitoring}>Stop Monitoring</Button>
+            <span>Next refresh in: {timeToRefresh}</span>
+          </div>
           :
           <Button variant="contained" color="primary" onClick={startMonitoring}>Start Monitoring</Button>
           }
