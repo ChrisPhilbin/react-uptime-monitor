@@ -27,6 +27,9 @@ const useStyles = makeStyles((theme) => ({
     position: 'absolute',
     top: 0,
     right: 0
+  },
+  titleDanger: {
+    color: '#FF0000'
   }
 }));
 
@@ -155,13 +158,15 @@ const App = () => {
               <Paper className={classes.paper}>
                 <div>
                   <DeleteIcon className={classes.deleteIcon} onClick={() => removeSite(site.name)} />
-                  <Typography variant="h3" align="center" color="primary">
+                  <Typography className={site.attributes.isDown ? classes.titleDanger : ""} variant="h3" align="center" color="primary">
                     {site.name}
                   </Typography>
-                  status: {site.attributes.httpStatusCode}<br />
-                  total times checked: {site.attributes.total}<br />
-                  total times failed: {site.attributes.downCount}<br />
-                  {site.attributes.isDown ? <Button variant="contained" color="primary" onClick={ () => resetIsDown(site)}>Start monitoring</Button> : null }
+                  <div className={site.attributes.isDown ? classes.titleDanger : ""}>
+                    status: {site.attributes.httpStatusCode}<br />
+                    total times checked: {site.attributes.total}<br />
+                    total times failed: {site.attributes.downCount}<br />
+                    {site.attributes.isDown ? <Button variant="contained" color="primary" onClick={ () => resetIsDown(site)}>Start monitoring</Button> : null }
+                  </div>
                 </div>
               </Paper>
             </Grid>
