@@ -92,6 +92,7 @@ const App = () => {
         } else {
           site.attributes.httpStatusCode = response.status
           site.attributes.downCount += 1
+          site.attributes.total += 1
             if (site.attributes.downCount >= 4) {
               site.attributes.isDown = true
               sendSMS(site.name)
