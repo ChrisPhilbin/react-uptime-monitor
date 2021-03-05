@@ -94,6 +94,7 @@ const App = () => {
           site.attributes.downCount += 1
             if (site.attributes.downCount >= 4) {
               site.attributes.isDown = true
+              sendSMS(site.name)
             }
           setMonitoredSites([...monitoredSites])
         }
@@ -132,6 +133,29 @@ const App = () => {
   const removeSite = (name) => {
     monitoredSites = monitoredSites.filter((site) => site.name !== name)
     setMonitoredSites([...monitoredSites])
+  }
+
+  const sendSMS = (name) => {
+    let message = {
+      body: `It looks like ${name} is currently experiencing down time!`
+    }
+
+    fetch('/api/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(message)
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        console.log("Successfully sent SMS message!")
+      } else {
+        console.log("Something went wrong when sending an SMS!")
+        alert(`It looks like ${name} is currently experiencing down time and was unable to send a text message!`)
+      }
+    })
   }
 
   return (
