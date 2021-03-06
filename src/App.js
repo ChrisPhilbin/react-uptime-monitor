@@ -30,6 +30,9 @@ const useStyles = makeStyles((theme) => ({
   },
   titleDanger: {
     color: '#FF0000'
+  },
+  downButton: {
+    marginTop: '10px'
   }
 }));
 
@@ -85,7 +88,10 @@ const App = () => {
       }
       fetch('https://sleepy-plateau-48238.herokuapp.com/' + site.attributes.url)
       .then(response => {
-        if (response.status === 200) {
+        let arr
+        let regex = /20[01]/
+        arr = response.status.toString().match(regex)
+        if (arr) {
           site.attributes.httpStatusCode = response.status
           site.attributes.total += 1
           setMonitoredSites([...monitoredSites])
@@ -190,7 +196,7 @@ const App = () => {
                     status: {site.attributes.httpStatusCode}<br />
                     total times checked: {site.attributes.total}<br />
                     total times failed: {site.attributes.downCount}<br />
-                    {site.attributes.isDown ? <Button variant="contained" color="primary" onClick={ () => resetIsDown(site)}>Start monitoring</Button> : null }
+                    {site.attributes.isDown ? <Button className={classes.downButton} variant="contained" color="primary" onClick={ () => resetIsDown(site)}>Monitor again</Button> : null }
                   </div>
                 </div>
               </Paper>
