@@ -41,6 +41,10 @@ let timer    = null
 
 const App = () => {
 
+  window.onbeforeunload = function(){
+    return 'Are you sure you want to leave?';
+  };
+
   const classes = useStyles()
 
   let sites = [
