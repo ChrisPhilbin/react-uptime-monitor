@@ -16,8 +16,15 @@ const AddSite = (props) => {
 
     const classes = useStyles()
 
-    let [name, setName] = useState('')
-    let [url, setURL]   = useState('')
+    let [name, setName]       = useState('')
+    let [url, setURL]         = useState('')
+    let [isValid, setIsValid] = useState(false)
+
+    const validateURL = () => {
+        let pattern = new RegExp(/^(ftp|http|https):\/\/[^ "]+$/)
+        let result = pattern.test(url)
+        result ? setIsValid(true) : setIsValid(false)
+    }
 
     const handleSubmit = () => {
         let newSite = {
