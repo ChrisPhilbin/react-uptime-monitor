@@ -18,31 +18,30 @@ const AddSite = (props) => {
 
     let [name, setName]       = useState('')
     let [url, setURL]         = useState('')
-    let [isValid, setIsValid] = useState(false)
-
-    const validateURL = () => {
-        let pattern = new RegExp(/^(ftp|http|https):\/\/[^ "]+$/)
-        let result = pattern.test(url)
-        result ? setIsValid(true) : setIsValid(false)
-    }
+    let [isValid, setIsValid] = useState(true)
 
     const handleSubmit = () => {
-        let newSite = {
-            name: name,
-            attributes: {
-                url: url,
-                isDown: false,
-                downCount: 0,
-                httpStatusCode: 0,
-                total: 0
+        let pattern = new RegExp(/^(ftp|http|https):\/\/[^ "]+$/)
+        setIsValid(pattern.test(url))
+        if (isValid) {
+            let newSite = {
+                name: name,
+                attributes: {
+                    url: url,
+                    isDown: false,
+                    downCount: 0,
+                    httpStatusCode: 0,
+                    total: 0
+                }
             }
+            props.monitoredSites.push(newSite)
+            props.setMonitoredSites([...props.monitoredSites])
+            setName('')
+            setURL('')
+        } else {
+            alert("URL must start with either http:// https:// or ftp://")
         }
-        props.monitoredSites.push(newSite)
-        props.setMonitoredSites([...props.monitoredSites])
-        setName('')
-        setURL('')
     }
-
     return(
         <div>
             <form className={classes.root} noValidate autoComplete="off">
