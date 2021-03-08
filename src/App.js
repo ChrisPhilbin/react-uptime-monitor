@@ -90,7 +90,7 @@ const App = () => {
       if (site.attributes.isDown === true) {
         return
       }
-      fetch('https://sleepy-plateau-48238.herokuapp.com/' + site.attributes.url)
+      fetch(process.env.REACT_APP_CORS + site.attributes.url)
       .then(response => {
         let arr
         let regex = /20[01]/

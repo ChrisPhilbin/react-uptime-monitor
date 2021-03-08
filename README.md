@@ -1,70 +1,43 @@
-# Getting Started with Create React App
+# React Uptime Monitor
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+React Uptime Monitor was inspired by my current role in which if a competitor experiences downtime it can have a very dramatic effect on their client base and as a result may be enough to entice them to make a switch to another vendor. Being able to monitor key competitors and receive text alerts if they're experiencing downtime of over ~15 minutes is valuable intel.
 
-## Available Scripts
+I set out to create a very basic way of monitoring the uptime of a group of sites based on whether or not a particular site responds to a basic HTTP GET request with a 20* HTTP status code. There are some obvious limitations to this tool, but ulatimely it gets the job done for the majority of sites I'd like to monitor. The most obvious limitation being if a particular site cannot reach its CDN but it simply returns an error page stating that their CDN is down - ultimately the HTTP status code will still result in a 200 or 201.
 
-In the project directory, you can run:
+## Built With
+* [React JS](https://www.reactjs.org)
+* [Material UI](https://material-ui.com/)
+* [Express JS](http://expressjs.com/)
+* [Twilio](https://www.twilio.com)
+* [CORS Anywhere](https://github.com/Rob--W/cors-anywhere)
 
-### `yarn start`
+## Installation
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Keep in mind you will need to create a Twilio account in order to be able to send SMS alerts when a site has been down for a prolonged period of time. You will also have to run your own [CORS Anywhere](https://github.com/Rob--W/cors-anywhere) proxy in order to add CORS headers to proxied requests. 
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+```
+git clone https://github.com/ChrisPhilbin/react-uptime-monitor.git
+cd react-uptime-monitor
+npm install
+```
 
-### `yarn test`
+Afterwards, you will have to create your own .env file:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```
+touch .env
+```
 
-### `yarn build`
+Edit your .env file to have the following variables:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```
+TWILIO_ACCOUNT_SID=YOUR TWILIO ACCOUNT SID
+TWILIO_AUTH_TOKEN=YOUR TWILIO ACCOUNT TOKEN
+TWILIO_PHONE_NUMBER=THE NUMBER ASSIGNED TO YOU FROM TWILIO
+TWILIO_TO_PHONE_NUMBER=PREFERABLY YOUR REAL PHONE NUMBER
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Once you've setup your Twilio account and have updated your .env, you can run the following to run a local instance of the React Uptime Monitor:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```
+npm run dev
+```
