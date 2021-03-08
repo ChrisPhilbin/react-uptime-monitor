@@ -32,10 +32,14 @@ const AddSite = (props) => {
                     total: 0
                 }
             }
-            props.monitoredSites.push(newSite)
-            props.setMonitoredSites([...props.monitoredSites])
-            setName('')
-            setURL('')
+            if (props.monitoredSites.includes(newSite.name)) {
+                props.monitoredSites.push(newSite)
+                props.setMonitoredSites([...props.monitoredSites])
+                setName('')
+                setURL('')
+            } else {
+                alert(`It looks like you already have ${newSite.name} listed!`)
+            }
         } else {
             alert("URL must start with either http:// https:// or ftp://")
         }
